@@ -4,6 +4,12 @@ An end-to-end fraud detection pipeline built on Databricks, implementing Medalli
 
 ---
 
+## Pipeline Run — All 4 Tasks Succeeded
+
+![Pipeline Run](screenshots/pipeline_run.png)
+
+---
+
 ## Architecture
 
 ```
@@ -95,6 +101,20 @@ Recall prioritized over precision — in fraud detection, missing actual fraud (
 
 ---
 
+## MLflow Experiment Tracking
+
+![MLflow Experiments](screenshots/mlflow_experiments.png)
+
+---
+
+## Unity Catalog — Delta Tables & Model Registry
+
+![Delta Tables](screenshots/delta_tables.png)
+
+![Model Registry](screenshots/model_registry.png)
+
+---
+
 ## Tech Stack
 
 | Component | Technology |
@@ -111,16 +131,15 @@ Recall prioritized over precision — in fraud detection, missing actual fraud (
 
 ---
 
-## Pipeline Run
-
-All 4 tasks completed successfully in **18 minutes** on Databricks Serverless compute.
+## Job Run Summary
 
 | Task | Status | Duration |
 |---|---|---|
-| bronze_ingestion | Succeeded | ~34s |
-| silver_gold_transform | Succeeded | ~1m |
-| model_training | Succeeded | ~15m |
-| batch_scoring | Succeeded | ~3m |
+| bronze_ingestion | ✅ Succeeded | ~34s |
+| silver_gold_transform | ✅ Succeeded | ~1m |
+| model_training | ✅ Succeeded | ~15m |
+| batch_scoring | ✅ Succeeded | ~3m |
+| **Total** | **✅ Succeeded** | **18m** |
 
 ---
 
@@ -155,3 +174,14 @@ fraud-detection-databricks/
 3. Update email path in `03_model_training.py`: `mlflow.set_experiment("/Users/your_email/fraud_detection")`
 4. Run notebooks in order (01 → 02 → 03 → 04), or configure as a Databricks Job
 5. View results in `Experiments` (MLflow UI) and `Catalog` (Delta tables + Model Registry)
+
+---
+
+## Key Interview Talking Points
+
+- Implemented **Medallion Architecture** with explicit data quality enforcement between layers — 1,081 records dropped by Silver constraints
+- Used **Auto Loader** with `availableNow` trigger for incremental, idempotent ingestion — production pattern for streaming pipelines
+- Logged model with **MLflow signature** for Unity Catalog compatibility — required for enterprise model governance
+- Handled **severe class imbalance** (0.17% fraud rate) via sample weights rather than oversampling — avoids data leakage
+- Pipeline achieves **ROC-AUC 0.9585** and **81% recall** on held-out test set
+- Full pipeline orchestrated as a **Databricks Job** with sequential task dependencies and lineage tracking (4 upstream, 3 downstream tables)

@@ -155,14 +155,3 @@ fraud-detection-databricks/
 3. Update email path in `03_model_training.py`: `mlflow.set_experiment("/Users/your_email/fraud_detection")`
 4. Run notebooks in order (01 → 02 → 03 → 04), or configure as a Databricks Job
 5. View results in `Experiments` (MLflow UI) and `Catalog` (Delta tables + Model Registry)
-
----
-
-## Key Interview Talking Points
-
-- Implemented **Medallion Architecture** with explicit data quality enforcement between layers (1,081 records dropped by Silver constraints)
-- Used **Auto Loader** with `availableNow` trigger for incremental, idempotent ingestion — production pattern for streaming pipelines
-- Logged model with **MLflow signature** for Unity Catalog compatibility — required for enterprise model governance
-- Handled **severe class imbalance** (0.17% fraud rate) via sample weights rather than oversampling — avoids data leakage
-- Pipeline achieves **ROC-AUC 0.9585** and **81% recall** on held-out test set
-- Full pipeline orchestrated as a **Databricks Job** with sequential task dependencies and lineage tracking (4 upstream, 3 downstream tables)
